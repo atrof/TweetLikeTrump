@@ -1,0 +1,6 @@
+Flask==0.12.2
+Flask-Cors==3.0.2
+gunicorn==19.0.0
+Jinja2==2.9.4
+numpy==1.12.1
+scipy
