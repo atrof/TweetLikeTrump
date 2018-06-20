@@ -1,0 +1,16 @@
+{% extends "wrapper.html" %}
+
+{% block content%}
+	<h1>Your Tweet</h1>
+	
+	{% with tweets = get_flashed_messages() %}
+        {% if tweets %}
+		{% for tweet in tweets%}
+			{{ tweet }}
+		{% endfor %}
+        {% endif %}
+        {% endwith %}
+	
+	<h1>Trumpometer Score</h1>
+	XY.Z%!	
+{% endblock %}
