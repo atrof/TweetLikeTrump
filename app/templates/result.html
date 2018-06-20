@@ -1,7 +1,7 @@
 {% extends "wrapper.html" %}
 
 {% block content%}
-	<h1>Your Tweet</h1>
+	<h2>Your Tweet</h2>
 	
 	{% with tweets = get_flashed_messages() %}
         {% if tweets %}
@@ -10,7 +10,9 @@
 		{% endfor %}
         {% endif %}
         {% endwith %}
-	
-	<h1>Trumpometer Score</h1>
-	XY.Z%!	
+	<br>
+	<h2>Trumpometer Score</h2>
+	Not available yet
+	<br>
+	<h1>¯\_(ツ)_/¯</h1>	
 {% endblock %}
