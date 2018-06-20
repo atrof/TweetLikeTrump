@@ -1,5 +1,5 @@
 # TweetLikeTrump
-Funny mix of machine learning, some NLP techniques, Python (Flask) backend and Bootstrap.
+Funny mix of machine learning and some NLP techniques built with Python (Flask).
 
 Webapp is online: [TweetLikeTrump on Heroku](https://tweetliketrump.herokuapp.com)
 
