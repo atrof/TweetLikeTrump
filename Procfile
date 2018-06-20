@@ -1,1 +1,1 @@
-web: python tlt.py
+web: gunicorn app:app
