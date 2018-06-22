@@ -1,3 +1,4 @@
+import numpy as np
 from sklearn import svm
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -30,12 +31,28 @@ def result():
         vect = joblib.load('vect.pkl')
         ocsvm = joblib.load('ocsvm.pkl')
 	
+	#OneClassSVM
         sentence_tfidf = vect.transform([sentence])
         ocsvm_pred = ocsvm.predict(sentence_tfidf)[0]
+	
+	#Cosine Similarity
+        trump_tfidf = joblib.load('trump_tfidf.pkl')
+        cos_dists = cosine_similarity(trump_tfidf, sentence_tfidf)
+        max_cos_dist = round(np.max(cos_dists), 3)
 
-        if ocsvm_pred == -1:
-            ocsvm_prediction = "No, you tweet not like Donald J. Trump!"
-        else:
-            ocsvm_prediction = "Hi, Mr. President!"
+        cos_dist_prediction = max_cos_dist * 100
 
-    return render_template('result.html', title = 'TweetLikeTrump - Score', sentence = sentence, ocsvm_prediction = ocsvm_prediction)
+        if ocsvm_pred == -1 and cos_dist_prediction < 30:
+            prediction = "You`re not Donald J. Trump!\nCatch the imposter!"
+        elif ocsvm_pred == -1 and cos_dist_prediction >= 30 and cos_dist_prediction < 50:
+            prediction = "Nice try, imitator!\nBut you`re not Donald! Ha-haaa!"
+        elif ocsvm_pred == 1 and cos_dist_prediction >= 50 and cos_dist_prediction < 75:
+            prediction = "Hmmm... Your tweet looks like Trump`s one!"
+        elif ocsvm_pred == 1 and cos_dist_prediction >= 75 and cos_dist_prediction <= 90:
+            prediction = "It`s almost obviously that you`re Mr. Trump!"
+        elif (ocsvm_pred == 1 and cos_dist_prediction < 50) or (ocsvm_pred == -1 and cos_dist_prediction >= 50 and cos_dist_prediction <= 90):
+            prediction = "Well done, imitator!\n I can`t decide whether you are Trump or not :("
+        elif cos_dist_prediction > 90:
+            prediction = "Donald, stop tweeting!\nAmerica needs you!"
+
+    return render_template('result.html', title = 'TweetLikeTrump - Score', sentence = sentence, prediction = prediction, cos_dist_prediction = cos_dist_prediction)
