@@ -3,15 +3,14 @@
 {% block content%}
 	<h2>Your Tweet</h2>
 	
-	{% with tweets = get_flashed_messages() %}
-        {% if tweets %}
-		{% for tweet in tweets%}
-			{{ tweet }}
-		{% endfor %}
-        {% endif %}
-        {% endwith %}
+	{{ sentence }}
+
 	<br>
+	<br>
+	<br>
+
 	<h2>Trumpometer Score</h2>
-	<h1>¯\_(ツ)_/¯</h1>
-	<br>Not available yet
+	<br>
+	
+	<h3>{{ ocsvm_prediction }}</h3>
 {% endblock %}

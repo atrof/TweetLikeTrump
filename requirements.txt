@@ -6,3 +6,5 @@ numpy==1.14.0
 pandas==0.22.0
 scipy==1.0.0
 WTForms==2.2.1
+sklearn==0.19.1
+re==2.2.1
