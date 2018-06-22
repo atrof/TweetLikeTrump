@@ -45,14 +45,16 @@ def result():
         if ocsvm_pred == -1 and cos_dist_prediction < 30:
             prediction = "You`re not Donald J. Trump!\nCatch the imposter!"
         elif ocsvm_pred == -1 and cos_dist_prediction >= 30 and cos_dist_prediction < 50:
-            prediction = "Nice try, imitator!\nBut you`re not Donald! Ha-haaa!"
+            prediction = "Nice try, imitator!\n But you`re not Donald! Ha-haaa!"
         elif ocsvm_pred == 1 and cos_dist_prediction >= 50 and cos_dist_prediction < 75:
             prediction = "Hmmm... Your tweet looks like Trump`s one!"
         elif ocsvm_pred == 1 and cos_dist_prediction >= 75 and cos_dist_prediction <= 90:
             prediction = "It`s almost obviously that you`re Mr. Trump!"
+        elif cos_dist_prediction == 0:
+            prediction = "No chance. No Trump here."
         elif (ocsvm_pred == 1 and cos_dist_prediction < 50) or (ocsvm_pred == -1 and cos_dist_prediction >= 50 and cos_dist_prediction <= 90):
             prediction = "Well done, imitator!\n I can`t decide whether you are Trump or not :("
         elif cos_dist_prediction > 90:
-            prediction = "Donald, stop tweeting!\nAmerica needs you!"
+            prediction = "Donald, stop tweeting!\n America needs you!"
 
     return render_template('result.html', title = 'TweetLikeTrump - Score', sentence = sentence, prediction = prediction, cos_dist_prediction = cos_dist_prediction)
