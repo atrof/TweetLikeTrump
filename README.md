@@ -21,6 +21,6 @@ Different approaches are used:
 MVP is deployed already - [TweetLikeTrump on Heroku](https://tweetliketrump.herokuapp.com). Changes are implemented automatically via Github.
 
 ## TODO
-* **Data Preprocessing**: remove @mentions, #hashtags & URLs from tweets
+* **Data Preprocessing**: remove @mentions, #hashtags & URLs from tweets; stemming
 * **Modeling**: binary classification, multi-label classification
 * **Front-end**: styling, AJAX for one-page app
