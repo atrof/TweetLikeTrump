@@ -1,6 +1,7 @@
 {% extends "wrapper.html" %}
 
 {% block content%}
+    <div id="main">
 	<h2>Your Tweet</h2>
 	
 	{{ sentence }}
@@ -13,4 +14,5 @@
 	<br>
 	<h2>{{ cos_dist_prediction }}%</h2>
 	<h3>{{ prediction }}</h3>
+    </div>
 {% endblock %}

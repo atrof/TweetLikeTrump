@@ -2,6 +2,7 @@
 
 {% block content%}
 	<div class="inner cover">
+	    <div id="main">
 		<h1 class="cover-heading">Hello, {{ user.username }}!</h1>
 		<p class="lead">Press Tweet Now Button
                 <br>Enter Your Tweet
@@ -11,5 +12,6 @@
 		<p class="lead">
                 <a href="/tweet" class="btn btn-md btn-info">Tweet Now!</a>
 		</p>
+	    </div>
         </div>
 {% endblock %}
