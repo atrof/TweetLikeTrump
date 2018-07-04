@@ -28,22 +28,38 @@ def result():
     if request.method == 'POST':
         sentence = request.form['tweet']
 	
-        vect = joblib.load('vect.pkl')
+        vect_bow = joblib.load('vect_bow.pkl')
+        vect_tfidf = joblib.load('vect_tfidf.pkl')
         ocsvm = joblib.load('ocsvm.pkl')
 	
-	#OneClassSVM
-        sentence_tfidf = vect.transform([sentence])
-        ocsvm_pred = ocsvm.predict(sentence_tfidf)[0]
+	#Sentence BOW and TF-IDF
+        sentence_bow = vect_bow.transform([sentence])
+        sentence_tfidf = vect_tfidf.transform([sentence])
 	
-	#Cosine Similarity
-        trump_tfidf = joblib.load('trump_tfidf.pkl')
-        cos_dists = cosine_similarity(trump_tfidf, sentence_tfidf)
-        max_cos_dist = round(np.max(cos_dists), 3)
+	#Cosine Similarity BOW
+        trump_bow = joblib.load('trump_bow.pkl')	
+        cos_dists_bow = cosine_similarity(trump_bow, sentence_bow)
+        max_cos_dist_bow = round(np.max(cos_dists_bow), 3)
+        max_cos_dist_bow = max_cos_dist_bow * 100
 
-        cos_dist_prediction = max_cos_dist * 100
+	#Cosine Similarity TF-IDF
+        trump_tfidf = joblib.load('trump_tfidf.pkl')
+        cos_dists_tfidf = cosine_similarity(trump_tfidf, sentence_tfidf)
+        max_cos_dist_tfidf = round(np.max(cos_dists_tfidf), 3)
+        max_cos_dist_tfidf = max_cos_dist_tfidf * 100
+
+	#Mean Cosine Similarity
+        mean_cos_dist = np.mean([np.max(cos_dists_bow), np.max(cos_dists_tfidf)])
+        cos_dist_prediction = round(mean_cos_dist, 4)
+        cos_dist_prediction = round(cos_dist_prediction * 100, 2)
+
+	#OneClassSVM
+        ocsvm_pred_bow = ocsvm.predict(sentence_bow)[0]
+        ocsvm_pred_tfidf = ocsvm.predict(sentence_tfidf)[0]
+        ocsvm_pred = np.random.choice([ocsvm_pred_bow, ocsvm_pred_tfidf])
 
         if ocsvm_pred == -1 and cos_dist_prediction < 30:
-            prediction = "You`re not Donald J. Trump!\nCatch the imposter!"
+            prediction = "You`re not Donald J. Trump!\n Catch the imposter!"
         elif ocsvm_pred == -1 and cos_dist_prediction >= 30 and cos_dist_prediction < 50:
             prediction = "Nice try, imitator!\n But you`re not Donald! Ha-haaa!"
         elif ocsvm_pred == 1 and cos_dist_prediction >= 50 and cos_dist_prediction < 75:
