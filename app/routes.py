@@ -1,8 +1,11 @@
 import numpy as np
 from sklearn import svm
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.externals import joblib
+
+from gensim.models import Word2Vec
+from nltk.tokenize import RegexpTokenizer
 
 from flask import render_template, flash, redirect, url_for, request
 from app.forms import TweetForm
@@ -27,23 +30,26 @@ def tweet():
 def result():
     if request.method == 'POST':
         sentence = request.form['tweet']
+
+        regexp_tok = RegexpTokenizer(r'\w+')
+        sentence_tokenized = regexp_tok.tokenize(sentence)
 	
-        vect_bow = joblib.load('vect_bow.pkl')
-        vect_tfidf = joblib.load('vect_tfidf.pkl')
-        ocsvm = joblib.load('ocsvm.pkl')
+        vect_bow = joblib.load('models/vect_bow.pkl')
+        vect_tfidf = joblib.load('models/vect_tfidf.pkl')
+        ocsvm = joblib.load('models/ocsvm.pkl')
 	
 	#Sentence BOW and TF-IDF
         sentence_bow = vect_bow.transform([sentence])
         sentence_tfidf = vect_tfidf.transform([sentence])
 	
 	#Cosine Similarity BOW
-        trump_bow = joblib.load('trump_bow.pkl')	
+        trump_bow = joblib.load('models/trump_bow.pkl')	
         cos_dists_bow = cosine_similarity(trump_bow, sentence_bow)
         max_cos_dist_bow = round(np.max(cos_dists_bow), 3)
         max_cos_dist_bow = max_cos_dist_bow * 100
 
 	#Cosine Similarity TF-IDF
-        trump_tfidf = joblib.load('trump_tfidf.pkl')
+        trump_tfidf = joblib.load('models/trump_tfidf.pkl')
         cos_dists_tfidf = cosine_similarity(trump_tfidf, sentence_tfidf)
         max_cos_dist_tfidf = round(np.max(cos_dists_tfidf), 3)
         max_cos_dist_tfidf = max_cos_dist_tfidf * 100
@@ -57,6 +63,20 @@ def result():
         ocsvm_pred_bow = ocsvm.predict(sentence_bow)[0]
         ocsvm_pred_tfidf = ocsvm.predict(sentence_tfidf)[0]
         ocsvm_pred = np.random.choice([ocsvm_pred_bow, ocsvm_pred_tfidf])
+
+	#Word2Vec - not active because of low speed :(
+        #df_train_tokenized = joblib.load('models/df_train_tokenized.pkl')
+        
+        #word2vec_model = joblib.load('models/w2v.pkl')
+        
+        #regexp_tknzr = RegexpTokenizer(r'\w+')
+
+        #wmd_list = []
+        #for tweet in df_train_tokenized:
+        #    wmd = word2vec_model.wv.wmdistance(tweet, sentence_tokenized)
+        #    wmd_list.append(wmd)
+
+        #wmd_pred = np.max(wmd_list)
 
         if ocsvm_pred == -1 and cos_dist_prediction < 30:
             prediction = "You`re not Donald J. Trump!\n Catch the imposter!"
