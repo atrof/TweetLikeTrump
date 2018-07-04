@@ -4,5 +4,5 @@ from wtforms.validators import DataRequired
 from wtforms.widgets import TextArea
 
 class TweetForm(FlaskForm):
-    tweet = StringField('Enter your tweet:', widget=TextArea(), validators=[DataRequired()])
+    tweet = StringField('Enter Your Tweet', widget=TextArea(), validators=[DataRequired()])
     submit = SubmitField('Tweet')

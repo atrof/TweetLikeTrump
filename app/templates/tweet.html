@@ -5,7 +5,8 @@
 	<form action="{{ url_for('result') }}" method="post" novalidate>
         {{ form.hidden_tag() }}
         	<p>
-            		<h2>{{ form.tweet.label }}</h2>
+            		<h3><i class="far fa-edit"></i> {{ form.tweet.label }}</h3>
+			<br>
             		{{ form.tweet(class="form-control", cols="50", rows="4") }}
 			{% for error in form.tweet.errors %}
             			<br><span style="color: red;">{{ error }}</span>
