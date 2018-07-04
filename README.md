@@ -17,13 +17,12 @@ Dataset is a base of [Donald J. Trump tweets](https://www.twitter.com/realdonald
 ### Modeling
 1. Cosine similarity - mean of BOW & TF-IDF
 2. One-Class Classification - random of BOW & TF-IDF
-3. Word2Vec - Word Mover`s Distance
+3. Word2Vec - Word Mover`s Distance - is TURNED OFF (too slow for online performance)
 
 ### Deployment
 MVP is online - [TweetLikeTrump on Heroku](https://tweetliketrump.herokuapp.com). Changes are implemented automatically via Github.
 
 ## TODO
 * **Data Preprocessing**: remove @mentions, #hashtags & URLs from tweets; stemming
-* **Modeling**: binary classification, multi-label classification
 * **Backend**: scheduler setup for updating models
-* **Frontend**: styling, AJAX for single-page app (SPA)
+* **Frontend**: AJAX for single-page app (SPA)
