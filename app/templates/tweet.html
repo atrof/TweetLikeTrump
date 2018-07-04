@@ -6,13 +6,13 @@
         {{ form.hidden_tag() }}
         	<p>
             		<h2>{{ form.tweet.label }}</h2>
-            		{{ form.tweet(cols="50", rows="4") }}
+            		{{ form.tweet(class="form-control", cols="50", rows="4") }}
 			{% for error in form.tweet.errors %}
             			<br><span style="color: red;">{{ error }}</span>
             		{% endfor %}
         	</p>
         	<p>
-			{{ form.submit() }}
+			{{ form.submit(class="btn btn-primary btn-lg btn-block") }}
 		</p>
     	</form>
     </div>
