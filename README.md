@@ -10,10 +10,10 @@ Determining the similarity between Trump's and user's style of tweetting.
 Dataset is a base of [Donald J. Trump tweets](https://www.twitter.com/realdonaldtrump). Data was collected via Twitter API  using earlier simple version of the [3200tweets](https://github.com/atrof/3200tweets) script.
 
 ### Data Preprocessing
-* TF-IDF
+* Bag-Of-Words (CountVectorizer)
+* TF-IDF (TfidfVectorizer)
 
 ### Modeling
-Different approaches are used:
 1. Cosine similarity
 2. One-Class Classification
 
