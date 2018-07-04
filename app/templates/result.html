@@ -2,17 +2,17 @@
 
 {% block content%}
     <div id="main">
-	<h2>Your Tweet</h2>
-	
-	{{ sentence }}
+	<h3>Your Tweet</h2>
+	<br>
+	<h5>{{ sentence }}</h5>
 
 	<br>
 	<br>
 	<br>
 
-	<h2><i class="fas fa-thermometer-three-quarters"></i> Trumpometer Score</h2>
+	<h3><i class="fas fa-thermometer-three-quarters"></i> Trumpometer Score</h2>
 	<br>
 	<h2>{{ cos_dist_prediction }}%</h2>
-	<h3>{{ prediction }}</h3>
+	<h5>{{ prediction }}</h5>
     </div>
 {% endblock %}
