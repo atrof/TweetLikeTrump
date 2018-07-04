@@ -69,7 +69,7 @@ def result():
         elif cos_dist_prediction == 0:
             prediction = "No chance. No Trump here."
         elif (ocsvm_pred == 1 and cos_dist_prediction < 50) or (ocsvm_pred == -1 and cos_dist_prediction >= 50 and cos_dist_prediction <= 90):
-            prediction = "Well done, imitator!\n I can`t decide whether you are Trump or not :("
+            prediction = "Well done, imitator!\n Models show different results and I can`t decide whether you are Trump or not :("
         elif cos_dist_prediction > 90:
             prediction = "Donald, stop tweeting!\n America needs you!"
 

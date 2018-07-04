@@ -14,8 +14,8 @@ Dataset is a base of [Donald J. Trump tweets](https://www.twitter.com/realdonald
 * TF-IDF (TfidfVectorizer)
 
 ### Modeling
-1. Cosine similarity
-2. One-Class Classification
+1. Cosine similarity - mean of BOW & TF-IDF
+2. One-Class Classification - random of BOW & TF-IDF
 
 ### Deployment
 MVP is online - [TweetLikeTrump on Heroku](https://tweetliketrump.herokuapp.com). Changes are implemented automatically via Github.
