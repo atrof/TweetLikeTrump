@@ -2,7 +2,7 @@
 
 {% block content%}
     <div id="main">
-	<form action="{{ url_for('result') }}" method="post" novalidate>
+	<form action="{{ url_for('result') }}" method="post">
         {{ form.hidden_tag() }}
         	<p>
             		<h3><i class="far fa-edit"></i> {{ form.tweet.label }}</h3>
@@ -13,7 +13,8 @@
             		{% endfor %}
         	</p>
         	<p>
-			{{ form.submit(class="btn btn-primary btn-lg btn-block") }}
+			
+			<button type="submit" class="btn btn-success btn-lg btn-block"><i class="fas fa-retweet"></i> {{ form.submit_value }}</button>
 		</p>
     	</form>
     </div>
