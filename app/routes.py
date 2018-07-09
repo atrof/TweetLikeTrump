@@ -4,7 +4,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.externals import joblib
 
-from gensim.models import Word2Vec
+#word2vec disabled - too slow
+#from gensim.models import Word2Vec
+
 from nltk.tokenize import RegexpTokenizer
 
 from flask import render_template, flash, redirect, url_for, request
