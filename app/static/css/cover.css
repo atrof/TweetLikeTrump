@@ -27,8 +27,8 @@ a:hover {
 html,
 body {
   height: 100%;
-  background: url("../img/trump_purple.jpeg");
-  background-size: 100%;
+  background: url("../img/trump_purple.jpeg") no-repeat center center fixed;
+  background-size: cover;
 }
 
 body {
