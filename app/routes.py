@@ -47,13 +47,13 @@ def result():
 	#Cosine Similarity BOW
         trump_bow = joblib.load('models/trump_bow.pkl')	
         cos_dists_bow = cosine_similarity(trump_bow, sentence_bow)
-        max_cos_dist_bow = round(np.max(cos_dists_bow), 3)
+        max_cos_dist_bow = round(np.max(cos_dists_bow), 4)
         max_cos_dist_bow = max_cos_dist_bow * 100
 
 	#Cosine Similarity TF-IDF
         trump_tfidf = joblib.load('models/trump_tfidf.pkl')
         cos_dists_tfidf = cosine_similarity(trump_tfidf, sentence_tfidf)
-        max_cos_dist_tfidf = round(np.max(cos_dists_tfidf), 3)
+        max_cos_dist_tfidf = round(np.max(cos_dists_tfidf), 4)
         max_cos_dist_tfidf = max_cos_dist_tfidf * 100
 
 	#Mean Cosine Similarity
@@ -65,6 +65,17 @@ def result():
         ocsvm_pred_bow = ocsvm.predict(sentence_bow)[0]
         ocsvm_pred_tfidf = ocsvm.predict(sentence_tfidf)[0]
         ocsvm_pred = np.random.choice([ocsvm_pred_bow, ocsvm_pred_tfidf])
+
+        if ocsvm_pred_bow == -1:
+            ocsvm_pred_bow = "-1 (Negative)"
+        else:
+            ocsvm_pred_bow = "1 (Positive)"
+
+        if ocsvm_pred_tfidf == -1:
+            ocsvm_pred_tfidf = "-1 (Negative)"
+        else:
+            ocsvm_pred_tfidf = "1 (Positive)"        
+        
 
 	#Word2Vec - not active because of low speed :(
         #df_train_tokenized = joblib.load('models/df_train_tokenized.pkl')
@@ -95,4 +106,4 @@ def result():
         elif cos_dist_prediction > 90:
             prediction = "Donald, stop tweeting!\n America needs you!"
 
-    return render_template('result.html', title = 'TweetLikeTrump - Score', sentence = sentence, prediction = prediction, cos_dist_prediction = cos_dist_prediction)
+    return render_template('result.html', title = 'TweetLikeTrump - Score', sentence = sentence, prediction = prediction, cos_dist_prediction = cos_dist_prediction, max_cos_dist_bow = max_cos_dist_bow, max_cos_dist_tfidf = max_cos_dist_tfidf, ocsvm_pred_bow = ocsvm_pred_bow, ocsvm_pred_tfidf = ocsvm_pred_tfidf)
