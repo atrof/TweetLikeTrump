@@ -23,6 +23,6 @@ Dataset is a base of [Donald J. Trump tweets](https://www.twitter.com/realdonald
 MVP is online - [TweetLikeTrump on Heroku](https://tweetliketrump.herokuapp.com). Changes are implemented automatically via Github.
 
 ## TODO
-* **Data Preprocessing**: remove @mentions, #hashtags & URLs from tweets; stemming
-* **Backend**: scheduler setup for updating models
-* **Frontend**: AJAX for single-page app (SPA)
+* Data Preprocessing: remove @mentions, #hashtags & URLs from tweets; stemming
+* Scheduler setup for updating models
+* AJAX for single-page app (SPA)
