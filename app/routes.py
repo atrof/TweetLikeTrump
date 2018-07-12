@@ -77,7 +77,7 @@ def result():
             ocsvm_pred_tfidf = "1 (Positive)"        
         
 
-	#Word2Vec - not active because of low speed :(
+	#Word2Vec - not active because of the low speed :(
         #df_train_tokenized = joblib.load('models/df_train_tokenized.pkl')
         
         #word2vec_model = joblib.load('models/w2v.pkl')
