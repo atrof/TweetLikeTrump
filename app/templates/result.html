@@ -6,7 +6,9 @@
   		<div class="tab-pane fade show active" id="score" role="tabpanel" aria-labelledby="score-tab">
 			<h5><i class="far fa-comment"></i> Your Tweet</h5>
 				<br>
-				<h6>{{ sentence }}</h6>
+				<p align="left" style="margin-left: 3%">
+				{{ sentence }}
+				</p>
 
 				<br>
 				<br>
@@ -22,7 +24,7 @@
 
 			<h3>Details</h3>
 			<br>
-			<p align="left">
+			<p align="left" style="margin-left: 16%">
 			Cosine Similarity (Bag-Of-Words): {{ max_cos_dist_bow }}%
 			<br>
 			Cosine Similarity (TF-IDF): {{ max_cos_dist_tfidf }}%
@@ -38,7 +40,7 @@
 	</div>
 
 	<br>
-	<nav class="nav nav-pills" style="margin-left: 20%" id="pills-tab" role="tablist">
+	<nav class="nav nav-pills" style="margin-left: 16%" id="pills-tab" role="tablist">
 	<a class="nav-link btn btn-md btn-primary" href="/tweet" role="tab"></i><i class="fas fa-angle-double-left"></i> Try Again</a>
 	<a class="nav-link active btn-md btn-success" style="margin-left: 5px; margin-right: 5px;" id="score-tab" data-toggle="pill" href="#score" role="tab" aria-controls="score" aria-selected="true"><i class="fas fa-angle-double-up"></i> Score</a>
 	<a class="nav-link btn btn-md btn-info" id="details-tab" data-toggle="pill" href="#details" role="tab" aria-controls="details" aria-selected="false">Details <i class="fas fa-angle-double-right"></i></a>
