@@ -74,7 +74,7 @@ def result():
         if ocsvm_pred_tfidf == -1:
             ocsvm_pred_tfidf = "-1 (Negative)"
         else:
-            ocsvm_pred_tfidf = "1 (Positive)"        
+            ocsvm_pred_tfidf = "1 (Positive)"     
         
 
 	#Word2Vec - not active because of the low speed :(
@@ -91,6 +91,7 @@ def result():
 
         #wmd_pred = np.max(wmd_list)
 
+
         if ocsvm_pred == -1 and cos_dist_prediction < 30:
             prediction = "You`re not Donald J. Trump!\n Catch the imposter!"
         elif ocsvm_pred == -1 and cos_dist_prediction >= 30 and cos_dist_prediction < 50:
@@ -105,5 +106,15 @@ def result():
             prediction = "Well done, imitator!\n Models show different results and I can`t decide whether you are Trump or not :("
         elif cos_dist_prediction > 90:
             prediction = "Donald, stop tweeting!\n America needs you!"
+
+        #==================================
+        #Values to string for correct view
+        #==================================
+        max_cos_dist_bow = "{}".format(max_cos_dist_bow)
+        max_cos_dist_tfidf = "{}".format(max_cos_dist_tfidf)
+        cos_dist_prediction = "{}".format(cos_dist_prediction)
+        ocsvm_pred_bow = "{}".format(ocsvm_pred_bow)
+        ocsvm_pred_tfidf = "{}".format(ocsvm_pred_tfidf)
+        ocsvm_pred = "{}".format(ocsvm_pred)
 
     return render_template('result.html', title = 'TweetLikeTrump - Score', sentence = sentence, prediction = prediction, cos_dist_prediction = cos_dist_prediction, max_cos_dist_bow = max_cos_dist_bow, max_cos_dist_tfidf = max_cos_dist_tfidf, ocsvm_pred_bow = ocsvm_pred_bow, ocsvm_pred_tfidf = ocsvm_pred_tfidf)
