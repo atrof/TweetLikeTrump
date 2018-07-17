@@ -1,4 +1,6 @@
+import pandas as pd
 import numpy as np
+import re
 from sklearn import svm
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
@@ -8,6 +10,7 @@ from sklearn.externals import joblib
 #from gensim.models import Word2Vec
 
 from nltk.tokenize import RegexpTokenizer
+from nltk import PorterStemmer
 
 from flask import render_template, flash, redirect, url_for, request
 from app.forms import TweetForm
@@ -33,37 +36,84 @@ def result():
     if request.method == 'POST':
         sentence = request.form['tweet']
 
-        regexp_tok = RegexpTokenizer(r'\w+')
-        sentence_tokenized = regexp_tok.tokenize(sentence)
-	
+        #CLEANING
+        sentence = pd.Series(sentence)
+        #Remove URLs, mentions, numbers
+        sentence_cleaned = sentence.replace(re.compile(r"http.?://[^\s]+[\s]?"))
+        sentence_cleaned = sentence_cleaned.replace(re.compile(r"@[^\s]+[\s]?"))
+        sentence_cleaned = sentence_cleaned.replace(re.compile(r"\s?[0-9]+\.?[0-9]*"))
+        #Remove punctuation and convert hashtags to normal words
+        for remove in map(lambda r: re.compile(re.escape(r)), [",", ":", "\"", "=", "&", ";", "%", "$", "@", "%", "^", "*", "(", ")", "{", "}", "[", "]", "|", "/", "\\", ">", "<", "-", "!", "?", ".", "'", "--", "---", "#", "..."]):
+            sentence_cleaned.replace(remove, " ", inplace=True)
+
+        #STEMMING
+        stemmer = PorterStemmer()
+        sentence_stemmed = sentence_cleaned.apply(lambda sequence: ' '.join(stemmer.stem(word) for word in sequence.lower().split()))
+        
+        #Cleaned and stemmed sentences
+        sentence_stemmed = sentence_stemmed[0]
+	sentence_cleaned = sentence_cleaned[0]
+
+	#LOADING TRAINING DATA
+	#bow
+        trump_bow = joblib.load('models/trump_bow.pkl')
+        trump_cleaned_bow = joblib.load('models/trump_cleaned_bow.pkl')
+        trump_stemmed_bow = joblib.load('models/trump_stemmed_bow.pkl')
+	#tfidf
+        trump_tfidf = joblib.load('models/trump_tfidf.pkl')
+        trump_cleaned_tfidf = joblib.load('models/trump_cleaned_tfidf.pkl')
+        trump_stemmed_tfidf = joblib.load('models/trump_stemmed_tfidf.pkl')
+
+	#LOADING MODELS
+	#bow vectorizers
         vect_bow = joblib.load('models/vect_bow.pkl')
+        vect_cleaned_bow = joblib.load('models/vect_cleaned_bow.pkl')
+        vect_stemmed_bow = joblib.load('models/vect_stemmed_bow.pkl')
+        #tfidf vectorizers
         vect_tfidf = joblib.load('models/vect_tfidf.pkl')
-        ocsvm = joblib.load('models/ocsvm.pkl')
-	
-	#Sentence BOW and TF-IDF
+        vect_cleaned_tfidf = joblib.load('models/vect_cleaned_tfidf.pkl')
+        vect_stemmed_tfidf = joblib.load('models/vect_stemmed_tfidf.pkl')
+	#OneClassSVM
+        ocsvm_bow = joblib.load('models/ocsvm_bow.pkl')
+        ocsvm_cleaned_bow = joblib.load('models/ocsvm_cleaned_bow.pkl')
+        ocsvm_stemmed_bow = joblib.load('models/ocsvm_stemmed_bow.pkl')
+        ocsvm_tfidf = joblib.load('models/ocsvm_tfidf.pkl')
+        ocsvm_cleaned_tfidf = joblib.load('models/ocsvm_cleaned_tfidf.pkl')
+        ocsvm_stemmed_tfidf = joblib.load('models/ocsvm_stemmed_tfidf.pkl')
+
+	#SENTENCE VECTORIZING	
+	#Source sentence BOW and TF-IDF
         sentence_bow = vect_bow.transform([sentence])
         sentence_tfidf = vect_tfidf.transform([sentence])
+        #Cleaned sentence BOW and TF-IDF
+        sentence_cleaned_bow = vect_cleaned_bow.transform([sentence_cleaned])
+        sentence_cleaned_tfidf = vect_cleaned_tfidf.transform([sentence_cleaned])
+        #Stemmed sentence BOW and TF-IDF
+        sentence_stemmed_bow = vect_stemmed_bow.transform([sentence_stemmed])
+        sentence_stemmed_tfidf = vect_stemmed_tfidf.transform([sentence_stemmed]
 	
+	#=======	
+	#RESULTS
+	#=======
+
+	#SOURCE SENTENCE (DISPLAYED)
 	#Cosine Similarity BOW
         trump_bow = joblib.load('models/trump_bow.pkl')	
         cos_dists_bow = cosine_similarity(trump_bow, sentence_bow)
         max_cos_dist_bow = round(np.max(cos_dists_bow), 4)
         max_cos_dist_bow = max_cos_dist_bow * 100
-
 	#Cosine Similarity TF-IDF
         trump_tfidf = joblib.load('models/trump_tfidf.pkl')
         cos_dists_tfidf = cosine_similarity(trump_tfidf, sentence_tfidf)
         max_cos_dist_tfidf = round(np.max(cos_dists_tfidf), 4)
         max_cos_dist_tfidf = max_cos_dist_tfidf * 100
-
 	#Mean Cosine Similarity
         mean_cos_dist = np.mean([np.max(cos_dists_bow), np.max(cos_dists_tfidf)])
-        cos_dist_prediction = round(mean_cos_dist, 4)
-        cos_dist_prediction = round(cos_dist_prediction * 100, 2)
-
+        mean_cos_dist_pred = round(mean_cos_dist, 4)
+        mean_cos_dist_pred = round(mean_cos_dist_pred * 100, 2)
 	#OneClassSVM
-        ocsvm_pred_bow = ocsvm.predict(sentence_bow)[0]
-        ocsvm_pred_tfidf = ocsvm.predict(sentence_tfidf)[0]
+        ocsvm_pred_bow = ocsvm_bow.predict(sentence_bow)[0]
+        ocsvm_pred_tfidf = ocsvm_tfidf.predict(sentence_tfidf)[0]
         ocsvm_pred = np.random.choice([ocsvm_pred_bow, ocsvm_pred_tfidf])
 
         if ocsvm_pred_bow == -1:
@@ -92,19 +142,19 @@ def result():
         #wmd_pred = np.max(wmd_list)
 
 
-        if ocsvm_pred == -1 and cos_dist_prediction < 30:
+        if ocsvm_pred == -1 and mean_cos_dist_pred < 30:
             prediction = "You`re not Donald J. Trump!\n Catch the imposter!"
-        elif ocsvm_pred == -1 and cos_dist_prediction >= 30 and cos_dist_prediction < 50:
+        elif ocsvm_pred == -1 and mean_cos_dist_pred >= 30 and cos_dist_prediction < 50:
             prediction = "Nice try, imitator!\n But you`re not Donald! Ha-haaa!"
-        elif ocsvm_pred == 1 and cos_dist_prediction >= 50 and cos_dist_prediction < 75:
+        elif ocsvm_pred == 1 and mean_cos_dist_pred >= 50 and mean_cos_dist_pred < 75:
             prediction = "Hmmm... Your tweet looks like Trump`s one!"
-        elif ocsvm_pred == 1 and cos_dist_prediction >= 75 and cos_dist_prediction <= 90:
+        elif ocsvm_pred == 1 and mean_cos_dist_pred >= 75 and mean_cos_dist_pred <= 90:
             prediction = "It`s almost obviously that you`re Mr. Trump!"
-        elif cos_dist_prediction == 0:
+        elif mean_cos_dist_pred == 0:
             prediction = "No chance. No Trump here."
-        elif (ocsvm_pred == 1 and cos_dist_prediction < 50) or (ocsvm_pred == -1 and cos_dist_prediction >= 50 and cos_dist_prediction <= 90):
+        elif (ocsvm_pred == 1 and mean_cos_dist_pred < 50) or (ocsvm_pred == -1 and mean_cos_dist_pred >= 50 and mean_cos_dist_pred <= 90):
             prediction = "Well done, imitator!\n Models show different results and I can`t decide whether you are Trump or not :("
-        elif cos_dist_prediction > 90:
+        elif mean_cos_dist_pred > 90:
             prediction = "Donald, stop tweeting!\n America needs you!"
 
         #==================================
@@ -117,4 +167,4 @@ def result():
         ocsvm_pred_tfidf = "{}".format(ocsvm_pred_tfidf)
         ocsvm_pred = "{}".format(ocsvm_pred)
 
-    return render_template('result.html', title = 'TweetLikeTrump - Score', sentence = sentence, prediction = prediction, cos_dist_prediction = cos_dist_prediction, max_cos_dist_bow = max_cos_dist_bow, max_cos_dist_tfidf = max_cos_dist_tfidf, ocsvm_pred_bow = ocsvm_pred_bow, ocsvm_pred_tfidf = ocsvm_pred_tfidf)
+    return render_template('result.html', title = 'TweetLikeTrump - Score', sentence = sentence, prediction = prediction, mean_cos_dist_pred = mean_cos_dist_pred, max_cos_dist_bow = max_cos_dist_bow, max_cos_dist_tfidf = max_cos_dist_tfidf, ocsvm_pred_bow = ocsvm_pred_bow, ocsvm_pred_tfidf = ocsvm_pred_tfidf)
