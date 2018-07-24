@@ -1,5 +1,5 @@
 ## TweetLikeTrump
-is a Flask-based web application which measures the degree of similarity between user's custom text and Donald J. Trump's tweetying style. Funny mix of machine learning and some NLP techniques. 
+is a Flask-based web application which measures the degree of similarity between user's custom text and Donald J. Trump's tweeting style. Funny mix of machine learning and some NLP techniques. 
 
 MVP is available online - [TweetLikeTrump on Heroku](https://tweetliketrump.herokuapp.com)
 
@@ -18,10 +18,10 @@ Dataset is a base of [Donald J. Trump tweets](https://www.twitter.com/realdonald
 ### Modeling
 1. Cosine similarity - mean of BOW & TF-IDF
 2. One-Class Classification - random of BOW & TF-IDF
-3. Word2Vec - Word Mover`s Distance - DISABLED (too slow for online performance)
+3. Word2Vec - Word Mover\`s Distance - DISABLED (too slow for online performance)
 
 ### Deployment
-MVP is online - [TweetLikeTrump on Heroku](https://tweetliketrump.herokuapp.com). Changes are implemented automatically via Github.
+[TweetLikeTrump on Heroku](https://tweetliketrump.herokuapp.com). Changes are implemented automatically via Github.
 
 ## TODO
 * Scheduler setup for updating models
